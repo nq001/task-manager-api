@@ -1,0 +1,71 @@
+{
+  "info": {
+    "name": "Task Manager API - NestJS",
+    "description": "Requests for the NestJS Task Manager learning project.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "taskId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create Task",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Build Task Manager API\",\n  \"description\": \"Practice NestJS, TypeORM and PostgreSQL\",\n  \"priority\": \"high\",\n  \"dueDate\": \"2026-08-20T18:00:00.000Z\"\n}"
+        },
+        "url": "{{baseUrl}}/tasks"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const body = pm.response.json();",
+              "if (body.id) pm.collectionVariables.set('taskId', body.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List Tasks",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/tasks?page=1&limit=10&sortBy=createdAt&order=DESC"
+      }
+    },
+    {
+      "name": "Filter and Search Tasks",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/tasks?status=pending&priority=high&search=nestjs&page=1&limit=10"
+      }
+    },
+    {
+      "name": "Get Task",
+      "request": { "method": "GET", "url": "{{baseUrl}}/tasks/{{taskId}}" }
+    },
+    {
+      "name": "Update Task",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"in_progress\",\n  \"priority\": \"urgent\"\n}" },
+        "url": "{{baseUrl}}/tasks/{{taskId}}"
+      }
+    },
+    {
+      "name": "Complete Task",
+      "request": { "method": "PATCH", "url": "{{baseUrl}}/tasks/{{taskId}}/complete" }
+    },
+    {
+      "name": "Delete Task",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/tasks/{{taskId}}" }
+    }
+  ]
+}
